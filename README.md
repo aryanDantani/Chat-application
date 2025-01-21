@@ -93,10 +93,6 @@ The system architecture of the Chat Application consists of several components w
 
 <figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
-## Codebase
-
-Github : [https://github.com/mayankyadav1711/MySocket.git](https://github.com/mayankyadav1711/MySocket.git)\
-\
 Here are the installation commands for setting up the chat application:
 
 **Server Installation:**

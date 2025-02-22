@@ -10,16 +10,12 @@ import { adminSecretKey } from "../index.js";
 const adminLogin = TryCatch(async (req, res, next) => {
   // Retrieve the secret key from the request body
   const { secretKey } = req.body;
-
   // Check if the secret key matches the admin secret key
   const isMatched = secretKey === adminSecretKey;
-
   // If the keys don't match, throw an error
   if (!isMatched) return next(new ErrorHandler("Invalid Admin Key", 401));
-
   // If the keys match, generate a JWT token
   const token = jwt.sign(secretKey, process.env.JWT_SECRET);
-
   // Set the token in a cookie and send a success response
   return res
     .status(200)
@@ -32,7 +28,6 @@ const adminLogin = TryCatch(async (req, res, next) => {
       message: "Authenticated Successfully, Welcome BOSS",
     });
 });
-
 const adminLogout = TryCatch(async (req, res, next) => {
   // Clear the admin token cookie and send a success response
   return res
@@ -57,14 +52,12 @@ const getAdminData = TryCatch(async (req, res, next) => {
 const allUsers = TryCatch(async (req, res) => {
   // Fetch all users from the database
   const users = await User.find({});
-
   const transformedUsers = await Promise.all(
     users.map(async ({ name, username, avatar, _id }) => {
       const [groups, friends] = await Promise.all([
         Chat.countDocuments({ groupChat: true, members: _id }), // count no of groups
         Chat.countDocuments({ groupChat: false, members: _id }), // count no. of non groups (normal chat)
       ]);
-
       return {
         name,
         username,
@@ -75,7 +68,6 @@ const allUsers = TryCatch(async (req, res) => {
       };
     })
   );
-
   return res.status(200).json({
     status: "success",
     users: transformedUsers,
@@ -87,11 +79,9 @@ const allChats = TryCatch(async (req, res) => {
   const chats = await Chat.find({})
     .populate("members", "name avatar")
     .populate("creator", "name avatar");
-
   const transformedChats = await Promise.all(
     chats.map(async ({ members, _id, groupChat, name, creator }) => {
       const totalMessages = await Message.countDocuments({ chat: _id }); // total no. of chats
-
       return {
         _id,
         groupChat,
